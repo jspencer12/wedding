@@ -4,6 +4,28 @@ function initNavMenu() {
     const mobileMenuButton = document.querySelector('.mobile-menu-button');
     
     if (!navLinks || !mobileMenuButton) return;
+
+    // Use a file-relative home link so the site also works when hosted below the domain root.
+    const homeLink = Array.from(navLinks.querySelectorAll('a')).find((link) =>
+        link.textContent.trim().toLowerCase() === 'home'
+    );
+    if (homeLink) {
+        homeLink.href = 'index.html';
+    }
+
+    // Keep Cookies available from every page in the shared navigation.
+    const hasCookiesLink = Array.from(navLinks.querySelectorAll('a')).some((link) =>
+        link.textContent.trim().toLowerCase() === 'cookies'
+    );
+    if (!hasCookiesLink) {
+        const cookiesItem = document.createElement('li');
+        cookiesItem.innerHTML = '<a href="cookies.html">Cookies</a>';
+
+        const rsvpItem = Array.from(navLinks.children).find((item) =>
+            item.querySelector('a')?.textContent.trim().toLowerCase() === 'rsvp'
+        );
+        navLinks.insertBefore(cookiesItem, rsvpItem || null);
+    }
     
     // Toggle menu on button click
     mobileMenuButton.addEventListener('click', () => {
